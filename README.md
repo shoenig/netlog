@@ -23,8 +23,6 @@ Example usage:
 
 ```bash
 ➜ netlog help
-Usage:  <flags> <subcommand> <subcommand args>
-
 Subcommands for [listening]:
 	listen           Listen for log events
 
