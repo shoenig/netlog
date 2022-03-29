@@ -20,28 +20,38 @@ const (
 	DefaultUseTLS  = false
 	DefaultAddress = "127.0.0.1"
 	DefaultPort    = 9999
+	DefaultName    = "default"
 	DefaultTimeout = 1 * time.Second
-	EnvTLS         = "NETLOG_TLS"
 	EnvAddress     = "NETLOG_ADDRESS"
 	EnvPort        = "NETLOG_PORT"
 )
 
 type Log struct {
-	tls     bool
 	address string
 	port    int
+	names   []string
 	timeout time.Duration
 	client  *http.Client
+}
+
+func (l *Log) copy() *Log {
+	c := New(
+		WithAddress(l.address),
+		WithPort(l.port),
+	)
+	c.names = make([]string, len(l.names))
+	copy(c.names, l.names)
+	return c
 }
 
 type Option func(*Log)
 
 func New(opts ...Option) *Log {
 	l := &Log{
-		tls:     DefaultUseTLS,
 		address: DefaultAddress,
 		port:    DefaultPort,
 		timeout: DefaultTimeout,
+		names:   []string{DefaultName},
 	}
 	for _, opt := range opts {
 		opt(l)
@@ -49,6 +59,16 @@ func New(opts ...Option) *Log {
 	l.client = cleanhttp.DefaultClient()
 	l.client.Timeout = l.timeout
 	return l
+}
+
+func Named(name string, opts ...Option) *Log {
+	return New(append(opts, WithName(name))...)
+}
+
+func WithName(name string) Option {
+	return func(l *Log) {
+		l.names = []string{name}
+	}
 }
 
 func WithTimeout(timeout time.Duration) Option {
@@ -77,8 +97,9 @@ func (l *Log) send(level Level, s string) {
 		panic(err)
 	}
 
-	request.Header.Set(HeaderContentType, "text/plain; charset=UTF-8")
 	request.Header.Set(HeaderLevel, level.String())
+	request.Header.Set(HeaderName, l.name())
+	request.Header.Set(HeaderContentType, "text/plain; charset=UTF-8")
 	request.Header.Set(HeaderUserAgent, "netlog/v1")
 
 	if _, err = l.client.Do(request); err != nil {
@@ -86,28 +107,45 @@ func (l *Log) send(level Level, s string) {
 	}
 }
 
+func (l *Log) name() string {
+	return strings.Join(l.names, ".")
+}
+
 func (l *Log) Log(level hclog.Level, msg string, args ...interface{}) {
 	panic("not implemented")
 }
 
+func (l *Log) format(msg string, args ...interface{}) string {
+	if len(args)%2 != 0 {
+		return msg + " !BAD-ARGS! " + fmt.Sprintf("%v", args)
+	}
+	var sb strings.Builder
+	sb.WriteString(msg)
+	sb.WriteString(" ")
+	for i := 0; i < len(args); i += 2 {
+		sb.WriteString(fmt.Sprintf("%s=%v ", args[i].(string), args[i+1]))
+	}
+	return strings.TrimSpace(sb.String())
+}
+
 func (l *Log) Trace(msg string, args ...interface{}) {
-	l.send(hclog.Trace, fmt.Sprintf(msg, args...))
+	l.send(hclog.Trace, l.format(msg, args...))
 }
 
 func (l *Log) Debug(msg string, args ...interface{}) {
-	l.send(hclog.Debug, fmt.Sprintf(msg, args...))
+	l.send(hclog.Debug, l.format(msg, args...))
 }
 
 func (l *Log) Info(msg string, args ...interface{}) {
-	l.send(hclog.Info, fmt.Sprintf(msg, args...))
+	l.send(hclog.Info, l.format(msg, args...))
 }
 
 func (l *Log) Warn(msg string, args ...interface{}) {
-	l.send(hclog.Warn, fmt.Sprintf(msg, args...))
+	l.send(hclog.Warn, l.format(msg, args...))
 }
 
 func (l *Log) Error(msg string, args ...interface{}) {
-	l.send(hclog.Error, fmt.Sprintf(msg, args...))
+	l.send(hclog.Error, l.format(msg, args...))
 }
 
 func (l *Log) IsTrace() bool {
@@ -135,23 +173,26 @@ func (l *Log) ImpliedArgs() []interface{} {
 }
 
 func (l *Log) With(args ...interface{}) hclog.Logger {
-	panic("not implemented")
+	return l
 }
 
 func (l *Log) Name() string {
-	panic("not implemented")
+	return l.name()
 }
 
 func (l *Log) Named(name string) hclog.Logger {
-	panic("not implemented")
+	c := l.copy()
+	c.names = append(c.names, name)
+	return c
 }
 
 func (l *Log) ResetNamed(name string) hclog.Logger {
-	panic("not implemented")
+	l.names = []string{DefaultName}
+	return l
 }
 
 func (l *Log) SetLevel(level hclog.Level) {
-	panic("not implemented")
+	return
 }
 
 func (l *Log) StandardLogger(opts *hclog.StandardLoggerOptions) *log.Logger {

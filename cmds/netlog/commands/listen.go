@@ -81,11 +81,23 @@ func start(e env.Environment) error {
 }
 
 func handler(w http.ResponseWriter, r *http.Request) {
-
-	level := r.Header.Get("X-NetLog-Level")
-
+	level, name := headers(r.Header)
 	b, _ := io.ReadAll(r.Body)
 	b = bytes.TrimSpace(b)
-	msg := fmt.Sprintf("[%s] %s", level, string(b))
+	msg := fmt.Sprintf("[%s] %s %s", level, name, string(b))
 	fmt.Println(msg)
+}
+
+func headers(h http.Header) (string, string) {
+	level := h.Get(netlog.HeaderLevel)
+	if level == "" {
+		level = "trace"
+	}
+
+	name := h.Get(netlog.HeaderName)
+	if name == "" {
+		name = netlog.DefaultName
+	}
+
+	return level, name
 }
