@@ -1,8 +1,8 @@
 # netlog
 
 [![CI Status](https://github.com/shoenig/netlog/actions/workflows/ci-tests.yaml/badge.svg)](https://github.com/shoenig/netlog/actions/workflows/ci-tests.yaml)
-[![Go Report Card](https://goreportcard.com/badge/gophers.dev/pkgs/netlog)](https://goreportcard.com/report/gophers.dev/pkgs/netlog)
-[![GoDoc](https://godoc.org/gophers.dev/pkgs/netlog?status.svg)](https://godoc.org/gophers.dev/pkgs/netlog)
+[![Go Report Card](https://goreportcard.com/badge/github.com/shoenig/netlog)](https://goreportcard.com/report/github.com/shoenig/netlog)
+[![GoDoc](https://godoc.org/github.com/shoenig/netlog?status.svg)](https://godoc.org/github.com/shoenig/netlog)
 [![GitHub](https://img.shields.io/github/license/shoenig/netlog.svg)](LICENSE)
 
 ## Project Overview
@@ -14,7 +14,7 @@ Package `netlog` provides an implementation of `go-hclog.Logger` that sends mess
 The `netlog` command can be installed by running:
 
 ```bash
-➜ go install gophers.dev/pkgs/netlog/cmds/netlog@latest
+➜ go install github.com/shoenig/netlog/cmds/netlog@latest
 ```
 
 Example usage:
@@ -56,7 +56,7 @@ It supports sending `trace`, `debug`, `info`, `warn`, `error` messages.
 The utility of the `netlog` package is that it implements HashiCorp's `go-hclog.Logger` interface, and can be used as a drop-in replacement in situations where terminal output is not available.
 
 ```go
-import "gophers.dev/pkgs/netlog"
+import "github.com/shoenig/netlog"
 
 // ... 
 
@@ -70,4 +70,4 @@ Contributions are welcome! Feel free to help make `netlog` better.
 
 ## License
 
-The `gophers.dev/pkgs/netlog` module is open source under the [BSD-3-Clause](LICENSE) license.
+The `github.com/shoenig/netlog` module is open source under the [BSD-3-Clause](LICENSE) license.

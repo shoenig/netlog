@@ -1,4 +1,4 @@
-module gophers.dev/pkgs/netlog
+module github.com/shoenig/netlog
 
 go 1.18
 

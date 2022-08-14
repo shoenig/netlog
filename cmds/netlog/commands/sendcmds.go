@@ -8,7 +8,7 @@ import (
 
 	"github.com/google/subcommands"
 	"github.com/hashicorp/go-hclog"
-	"gophers.dev/pkgs/netlog"
+	"github.com/shoenig/netlog"
 )
 
 type cmd struct {
@@ -32,7 +32,7 @@ func (c *cmd) SetFlags(*flag.FlagSet) {
 }
 
 func (c *cmd) execute(s string) error {
-	log := netlog.New()
+	log := netlog.New("")
 
 	switch c.level {
 	case hclog.Off:

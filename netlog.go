@@ -36,6 +36,7 @@ type Log struct {
 
 func (l *Log) copy() *Log {
 	c := New(
+		"",
 		WithAddress(l.address),
 		WithPort(l.port),
 	)
@@ -46,23 +47,20 @@ func (l *Log) copy() *Log {
 
 type Option func(*Log)
 
-func New(opts ...Option) *Log {
+func New(name string, opts ...Option) *Log {
 	l := &Log{
 		address: DefaultAddress,
 		port:    DefaultPort,
 		timeout: DefaultTimeout,
 		names:   []string{DefaultName},
 	}
+	WithName(name)(l)
 	for _, opt := range opts {
 		opt(l)
 	}
 	l.client = cleanhttp.DefaultClient()
 	l.client.Timeout = l.timeout
 	return l
-}
-
-func Named(name string, opts ...Option) *Log {
-	return New(append(opts, WithName(name))...)
 }
 
 func WithName(name string) Option {
@@ -149,23 +147,23 @@ func (l *Log) Error(msg string, args ...interface{}) {
 }
 
 func (l *Log) IsTrace() bool {
-	panic("not implemented")
+	return true
 }
 
 func (l *Log) IsDebug() bool {
-	panic("not implemented")
+	return true
 }
 
 func (l *Log) IsInfo() bool {
-	panic("not implemented")
+	return true
 }
 
 func (l *Log) IsWarn() bool {
-	panic("not implemented")
+	return true
 }
 
 func (l *Log) IsError() bool {
-	panic("not implemented")
+	return true
 }
 
 func (l *Log) ImpliedArgs() []interface{} {

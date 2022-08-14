@@ -9,8 +9,8 @@ import (
 	"net/http"
 
 	"github.com/google/subcommands"
+	"github.com/shoenig/netlog"
 	"gophers.dev/pkgs/extractors/env"
-	"gophers.dev/pkgs/netlog"
 )
 
 const (
