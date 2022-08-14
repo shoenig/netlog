@@ -7,7 +7,7 @@ import (
 
 	"github.com/google/subcommands"
 	"github.com/hashicorp/go-hclog"
-	"gophers.dev/pkgs/netlog/cmds/netlog/commands"
+	"github.com/shoenig/netlog/cmds/netlog/commands"
 )
 
 func main() {
