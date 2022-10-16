@@ -16,8 +16,8 @@ const (
 	white  = "\033[97m"
 )
 
-func apply(color, format string, args ...any) string {
-	return color + fmt.Sprintf(format, args...) + reset
+func apply(color, msg string, args ...any) string {
+	return color + format(msg, args...) + reset
 }
 
 func Red(format string, args ...any) {

@@ -113,37 +113,24 @@ func (l *Log) Log(level hclog.Level, msg string, args ...interface{}) {
 	panic("not implemented")
 }
 
-func (l *Log) format(msg string, args ...interface{}) string {
-	if len(args)%2 != 0 {
-		return msg + " !BAD-ARGS! " + fmt.Sprintf("%v", args)
-	}
-	var sb strings.Builder
-	sb.WriteString(msg)
-	sb.WriteString(" ")
-	for i := 0; i < len(args); i += 2 {
-		sb.WriteString(fmt.Sprintf("%s=%v ", args[i].(string), args[i+1]))
-	}
-	return strings.TrimSpace(sb.String())
-}
-
 func (l *Log) Trace(msg string, args ...interface{}) {
-	l.send(hclog.Trace, l.format(msg, args...))
+	l.send(hclog.Trace, format(msg, args...))
 }
 
 func (l *Log) Debug(msg string, args ...interface{}) {
-	l.send(hclog.Debug, l.format(msg, args...))
+	l.send(hclog.Debug, format(msg, args...))
 }
 
 func (l *Log) Info(msg string, args ...interface{}) {
-	l.send(hclog.Info, l.format(msg, args...))
+	l.send(hclog.Info, format(msg, args...))
 }
 
 func (l *Log) Warn(msg string, args ...interface{}) {
-	l.send(hclog.Warn, l.format(msg, args...))
+	l.send(hclog.Warn, format(msg, args...))
 }
 
 func (l *Log) Error(msg string, args ...interface{}) {
-	l.send(hclog.Error, l.format(msg, args...))
+	l.send(hclog.Error, format(msg, args...))
 }
 
 func (l *Log) IsTrace() bool {
