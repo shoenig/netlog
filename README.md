@@ -1,13 +1,14 @@
 # netlog
 
-[![CI Status](https://github.com/shoenig/netlog/actions/workflows/ci-tests.yaml/badge.svg)](https://github.com/shoenig/netlog/actions/workflows/ci-tests.yaml)
-[![Go Report Card](https://goreportcard.com/badge/github.com/shoenig/netlog)](https://goreportcard.com/report/github.com/shoenig/netlog)
 [![GoDoc](https://godoc.org/github.com/shoenig/netlog?status.svg)](https://godoc.org/github.com/shoenig/netlog)
 [![GitHub](https://img.shields.io/github/license/shoenig/netlog.svg)](LICENSE)
 
 ## Project Overview
 
-Package `netlog` provides an implementation of `go-hclog.Logger` that sends messages over the network to a listener. Useful for debug logging in situations where `os.Stdout`/`os.Stderr` are not available.
+Package `netlog` provides an implementation of `go-hclog.Logger` that sends messages over the network to a listener.
+Useful for debug logging in situations where `os.Stdout`/`os.Stderr` are not available.
+
+Also implements colorized local logging helpers, e.g. `netlog.Yellow("message", "key", "value", ...)`
 
 ## Getting Started
 
