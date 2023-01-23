@@ -180,6 +180,10 @@ func (l *Log) SetLevel(level hclog.Level) {
 	return
 }
 
+func (l *Log) GetLevel() hclog.Level {
+	return hclog.Trace
+}
+
 func (l *Log) StandardLogger(opts *hclog.StandardLoggerOptions) *log.Logger {
 	panic("not implemented")
 }
