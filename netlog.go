@@ -32,6 +32,7 @@ type Log struct {
 	names   []string
 	timeout time.Duration
 	client  *http.Client
+	color   string
 }
 
 func (l *Log) copy() *Log {
@@ -87,7 +88,66 @@ func WithPort(port int) Option {
 	}
 }
 
+func WithRed() Option {
+	return func(l *Log) {
+		l.color = red
+		l.address = ""
+	}
+}
+
+func WithGreen() Option {
+	return func(l *Log) {
+		l.color = green
+		l.address = ""
+	}
+}
+
+func WithYellow() Option {
+	return func(l *Log) {
+		l.color = yellow
+		l.address = ""
+	}
+}
+
+func WithBlue() Option {
+	return func(l *Log) {
+		l.color = blue
+		l.address = ""
+	}
+}
+
+func WithPurple() Option {
+	return func(l *Log) {
+		l.color = purple
+		l.address = ""
+	}
+}
+
+func (l *Log) noNetwork() bool {
+	return l.address == "" || l.port <= 0
+}
+
 func (l *Log) send(level Level, s string) {
+	if l.noNetwork() {
+		switch l.color {
+		case red:
+			Red(s)
+		case green:
+			Green(s)
+		case blue:
+			Blue(s)
+		case purple:
+			Purple(s)
+		case cyan:
+			Cyan(s)
+		case gray, white:
+			White(s)
+		default:
+			Yellow(s)
+		}
+		return
+	}
+
 	address := fmt.Sprintf("http://%s:%d", l.address, l.port)
 
 	request, err := http.NewRequest(http.MethodPost, address, strings.NewReader(s))
