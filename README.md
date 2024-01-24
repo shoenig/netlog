@@ -61,7 +61,7 @@ import "github.com/shoenig/netlog"
 
 // ... 
 
-log := netlog.New()
+log := netlog.New("log-name")
 log.Info("this is a message")
 ```
 
